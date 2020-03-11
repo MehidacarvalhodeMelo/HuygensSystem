@@ -32,11 +32,12 @@ function abrirTbDescritiva() {
         var acm = `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
         }else{
             var acm = acm + `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
-        document.getElementById('frequencia-descritiva').innerHTML = acm
+            document.getElementById('frequencia-descritiva').innerHTML = acm
         }
         }
     console.log(agrupamentos)
-
+    //Ordenação
+/*
     for(var chave in agrupamentos) {
         if (chave.length > 0) {
             let novaDiv = document.createElement('div');
@@ -53,7 +54,7 @@ function abrirTbDescritiva() {
             document.getElementById('ordernarInputs').appendChild(novaDiv);
         }
     }
-
+*/
     var ordemVariavel = $('input[name="ordemVariavel"]');
     var tipoVariavel = $('input[name="options"]:checked')[0];
 
@@ -65,6 +66,46 @@ function abrirTbDescritiva() {
     }
     document.getElementById('tabela-descritiva').style.display='block'
     document.getElementById('medida-separatriz').style.display='block'
+
+    // Gráfico
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Variaveis', 'Variaveis', 'Variaveis', 'Variaveis', 'Variaveis', 'Variaveis'],
+            datasets: [{
+                label: nomeVariavel,
+                data: [10, 20, 30, 40, 50, 60],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    // Fim Gráfico
 }
 function separatrizSelect() {
     if(document.getElementById('selectSeparatriz').value =='0'){
