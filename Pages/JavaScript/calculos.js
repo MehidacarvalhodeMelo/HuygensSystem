@@ -12,27 +12,33 @@ $(document).ready(function () {
 
 function abrirTbDescritiva() {
     // Caso amostra
-    var nomeVariavel = $('input[name="nomeVariavel"]').val();
-    var populacao = $('input[name="dadosInp"]')[0];
+    let nomeVariavel = $('input[name="nomeVariavel"]').val();
+    let populacao = $('input[name="dadosInp"]')[0];
     document.getElementById('nomeVariavel').innerHTML = nomeVariavel
-    var populacaoArray = populacao.value.split(';');
-    var agrupamentos = {};
+    let populacaoArray = populacao.value.split(';');
+    let agrupamentos = {};
     for(var i = 0;i < populacaoArray.length;i++) {
-        var grupo = populacaoArray[i];
+        let grupo = populacaoArray[i];
         if (typeof (agrupamentos[grupo]) === 'undefined') {
             agrupamentos[grupo] = 1;
         } else {
             agrupamentos[grupo]++;
         }
     }
-    var FacDescritiva = 0
-    var FacDescritivaPercent = 0
+    let fRDiscretaN = []
+    let fRDiscretaS = []
+    let FacDescritiva = 0
+    let FacDescritivaPercent = 0
     for ( var aux in agrupamentos) {
         if (typeof acm === 'undefined'){
-        var acm = `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
+            var acm = `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
+            fRDiscretaN.push((agrupamentos[aux]*100)/populacaoArray.length)
+            fRDiscretaS.push(aux)
         }else{
             var acm = acm + `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
             document.getElementById('frequencia-descritiva').innerHTML = acm
+            fRDiscretaN.push((agrupamentos[aux]*100)/populacaoArray.length)
+            fRDiscretaS.push(aux).toString()
         }
         }
     console.log(agrupamentos)
@@ -72,10 +78,10 @@ function abrirTbDescritiva() {
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Variaveis', 'Variaveis', 'Variaveis', 'Variaveis', 'Variaveis', 'Variaveis'],
+            labels: fRDiscretaS,
             datasets: [{
                 label: nomeVariavel,
-                data: [10, 20, 30, 40, 50, 60],
+                data: fRDiscretaN,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -106,6 +112,7 @@ function abrirTbDescritiva() {
         }
     });
     // Fim Gráfico
+    console.log(myChart)
 }
 function separatrizSelect() {
     if(document.getElementById('selectSeparatriz').value =='0'){
