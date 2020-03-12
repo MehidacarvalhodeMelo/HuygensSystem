@@ -1,4 +1,5 @@
-
+// Margem de erro (input)
+/*
 $(document).ready(function () {
     $('#options-group').change(function (ev) {
         var target = ev.target;
@@ -9,7 +10,7 @@ $(document).ready(function () {
         }
     })
 })
-
+ */
 function abrirTbDescritiva() {
     // Caso amostra
     let nomeVariavel = $('input[name="nomeVariavel"]').val();
@@ -25,6 +26,7 @@ function abrirTbDescritiva() {
             agrupamentos[grupo]++;
         }
     }
+    //Frequências tabela/cálculo
     let fRDiscretaN = []
     let fRDiscretaS = []
     let FacDescritiva = 0
@@ -41,6 +43,27 @@ function abrirTbDescritiva() {
             fRDiscretaS.push(aux).toString()
         }
         }
+    //Cálculo Moda
+    var acmModa = 0
+    var modaDiscreta = 0
+    for(var aux in agrupamentos){
+        if(acmModa === agrupamentos[aux]){
+            modaDiscreta = "Não Existe"
+        }
+        if(agrupamentos[aux] > acmModa){
+            acmModa = agrupamentos[aux]
+            modaDiscreta = aux
+        }
+    }
+    //Cálculo Média
+    var acmMedia = 0
+    var mediaDiscreta = 0
+    for(aux in agrupamentos) {
+        acmMedia = acmMedia + (Number(aux) * agrupamentos[aux])
+    }
+    mediaDiscreta = acmMedia/populacaoArray.length
+    document.getElementById('modaDiscreta').innerHTML = modaDiscreta
+    document.getElementById('mediaDiscreta').innerHTML = mediaDiscreta.toFixed(2)
     console.log(agrupamentos)
     //Ordenação
 /*
@@ -61,6 +84,8 @@ function abrirTbDescritiva() {
         }
     }
 */
+//Margem de erro
+/*
     var ordemVariavel = $('input[name="ordemVariavel"]');
     var tipoVariavel = $('input[name="options"]:checked')[0];
 
@@ -70,6 +95,8 @@ function abrirTbDescritiva() {
         var n0 = 1/(margemErro * margemErro);
         var n = (populacaoArray.length * n0) / (populacaoArray + n0)
     }
+
+ */
     document.getElementById('tabela-descritiva').style.display='block'
     document.getElementById('medida-separatriz').style.display='block'
 
@@ -112,7 +139,6 @@ function abrirTbDescritiva() {
         }
     });
     // Fim Gráfico
-    console.log(myChart)
 }
 function separatrizSelect() {
     if(document.getElementById('selectSeparatriz').value =='0'){
