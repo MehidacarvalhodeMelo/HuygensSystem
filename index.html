@@ -50,7 +50,7 @@
     <div>
         <input class="nomeVariavelInp" placeholder="Nome da Variável" size="50" name="nomeVariavel">
         <input class="dadosInp" placeholder="Digite os dados separados por ';'" size="50" name="dadosInp">
-        <select name="ordemVariavel" class="custom-select my-1 mr-sm-2" style="width: 200px">
+        <select id="descritivaEscolha" name="ordemVariavel" class="custom-select my-1 mr-sm-2" style="width: 200px">
             <option value="0">Selecione</option>
             <option value="nominal">Nominal</option>
             <option value="ordinal">Ordinal</option>
@@ -119,13 +119,7 @@
             <th scope="col">Mediana</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td id="modaDiscreta"></td>
-            <td id="mediaDiscreta"></td>
-            <td>0</td>
-        </tr>
-        </tbody>
+        <tbody id="medidas-tendencia-central"></tbody>
     </table>
     <table class="table table-sm table-light">
         <thead>
