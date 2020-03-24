@@ -186,6 +186,8 @@ function abrirTbDescritiva() {
             },
         });
         //Fim da condição }
+    } else {
+        document.getElementById('ordernarInputs').innerHTML = '';
     }
 
 
@@ -303,47 +305,94 @@ function abrirTbDescritiva() {
 
 
 
-    if (document.getElementById('descritivaEscolha').value == 'continua'){
+    //************* Continua *************
+
+    if (document.getElementById('descritivaEscolha').value == 'continua') {
         let nomeVariavel = $('input[name="nomeVariavel"]').val();
         let populacao = $('input[name="dadosInp"]')[0];
         let populacaoArray = populacao.value.split(';');
+        populacaoArray.sort() // ordenar em ordem alfabetica
+        let nTotal = populacaoArray.length; // total de elementos
+        let nMin = populacaoArray[0]; //para comparar menor valor
+        let nMax = populacaoArray[nTotal - 1] // o maior valor do do vetor
         let agrupamentos = {};
-        for(var i = 0;i < populacaoArray.length;i++) {
+        let acum = 0; //acumulador
+        let raiz = Math.sqrt(nTotal)
+        raiz = Math.floor(raiz) //raiz de total, arrendodamemto
+        for (var i = 0; i < populacaoArray.length; i++) {
             let grupo = populacaoArray[i];
-            if (typeof (agrupamentos[grupo]) === 'undefined') {
+            if (typeof(agrupamentos[grupo]) === 'undefined') {
                 agrupamentos[grupo] = 1;
+                acum++
             } else {
                 agrupamentos[grupo]++;
+                acum++
             }
         }
 
+        let intervalo = 0; //intervalo de numeros
+        let amplitude = nMax - nMin; //amplitude
+        intervalo = Math.floor(amplitude / raiz); //quantos elementos pular
+        let valorInicial = Number(nMin);
+        let valorVariavel = []; //iria pegar o valor da variavel
+        let porcentagemFreContinua = []; // valor da porcentagem
+        let factotalPorcentagem = 0;
+        let acumFacContinua = 0;
 
-        document.getElementById('nomeVariavel').innerHTML = nomeVariavel
-        //Frequências tabela/cálculo
-        let fRDescritivaN = []
-        let fRDescritivaS = []
-        let FacDescritiva = 0
-        let FacDescritivaPercent = 0
-        for ( var aux in agrupamentos) {
-            if (typeof acm === 'undefined'){
-                var acm = `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
-                fRDescritivaN.push((agrupamentos[aux]*100)/populacaoArray.length)
-                fRDescritivaS.push(aux)
-            }else{
-                var acm = acm + `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
-                document.getElementById('frequencia-descritiva').innerHTML = acm
-                fRDescritivaN.push((agrupamentos[aux]*100)/populacaoArray.length)
-                fRDescritivaS.push(aux).toString()
-            }
+        while (valorInicial <= nMax) {
+            var valorFinal = 0;
+            let cont = 0;
+            let facContinua = 0;
+            let possibilidadesDeDivisao = range(3, raiz - 1);
+            valorFinal = Number(valorInicial + descobrirDivisor(amplitude + 1, possibilidadesDeDivisao));
+           
+             for (let i = 0; i < populacaoArray.length; i++) {
+                 if (populacaoArray[i] >= valorInicial && populacaoArray[i] <= valorFinal) {
+                     cont++
+                 }
+             }
+             let facPorcentagem = Math.round((cont / acum) * 100)
+             factotalPorcentagem = facPorcentagem + acumFacContinua
+             facContinua += cont
+             //nomeVariavel = `<td>${valorInicial}---------${valorFinal}</td><td>${cont}<td>${Math.round((cont/acum)*100)}<td>${facContinua}<td>${factotalPorcentagem} <br>`
+             acumFacContinua += facPorcentagem
+             let indice = `${valorInicial} --- ${valorFinal}`
+             //Adiciona o indice ao vetor
+             valorVariavel.push(indice)
+             //Adiciona a porcentagem ao vetor
+             porcentagemFreContinua.push(Math.round((cont / acum) * 100))
+             valorInicial = valorFinal
         }
+
+        console.log(porcentagemFreContinua)
+        //document.getElementById('nomeVariavel').innerHTML = nomeVariavel
+
+        // //Frequências tabela/cálculo
+        // let fRDescritivaN = []
+        // let fRDescritivaS = []
+        // let FacDescritiva = 0
+        // let FacDescritivaPercent = 0
+        // for (var aux in agrupamentos) {
+        //     if (typeof acm === 'undefined') {
+        //         var acm = `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
+        //         fRDescritivaN.push((agrupamentos[aux] * 100) / populacaoArray.length)
+        //         fRDescritivaS.push(aux)
+        //     } else {
+        //         var acm = acm + `<tr><td>${aux}</td><td>${agrupamentos[aux]}</td><td>${((agrupamentos[aux]*100)/populacaoArray.length).toFixed(2)}%</td><td>${FacDescritiva = FacDescritiva + agrupamentos[aux]}</td><td>${(FacDescritivaPercent = FacDescritivaPercent + ((agrupamentos[aux]*100)/populacaoArray.length)).toFixed(2)}%</td></tr>`
+        //         document.getElementById('frequencia-descritiva').innerHTML = acm
+        //         porcentagemFreContinua.push(Math.round((cont / acum) * 100))
+        //         valorVariavel
+        //     }
+        // }
+
         //Cálculo Moda
         var acmModa = 0
         var moda = 0
-        for(var aux in agrupamentos){
-            if(acmModa === agrupamentos[aux]){
+        for (var aux in agrupamentos) {
+            if (acmModa === agrupamentos[aux]) {
                 moda = "Não Existe"
             }
-            if(agrupamentos[aux] > acmModa){
+            if (agrupamentos[aux] > acmModa) {
                 acmModa = agrupamentos[aux]
                 moda = aux
             }
@@ -351,18 +400,57 @@ function abrirTbDescritiva() {
         //Cálculo Média
         var acmMedia = 0
         var media = 0
-        for(aux in agrupamentos) {
+        for (aux in agrupamentos) {
             acmMedia = acmMedia + (Number(aux) * agrupamentos[aux])
         }
-        media = acmMedia/populacaoArray.length
-        document.getElementById('medidas-tendencia-central').innerHTML = `<tr><td>${moda}</td><td>${media.toFixed(2)}</td><td>0</td></tr>`
+        media = acmMedia / populacaoArray.length
 
-        document.getElementById('tabela-descritiva').style.display='block'
-        document.getElementById('medida-separatriz').style.display='block'
+        document.getElementById('tabela-descritiva').style.display = 'block'
+        document.getElementById('medida-separatriz').style.display = 'block'
 
+        var ctx = document.getElementById('myChart');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: valorVariavel,
+                datasets: [{
+                    label: nomeVariavel,
+                    data: porcentagemFreContinua,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
 
     }
 }
+
+//####################################### Fim continua #######################################
+
 function separatrizSelect() {
     if(document.getElementById('selectSeparatriz').value =='0'){
         document.getElementById('rg4').style.display='none'
@@ -394,4 +482,23 @@ function separatrizSelect() {
         document.getElementById('rg10').style.display='none'
         document.getElementById('rg100').style.display='block'
     }
+}
+
+function range(size, startAt = 0) {
+    return [...Array(size).keys()].map(i => i + startAt);
+}
+
+function descobrirDivisor(teste, possibilidades) {
+    // 18;18;18;18;18;18;18;19;19;20;22;22;25;28;29;29;30;39;54
+    let resultado = 0;
+    possibilidades.forEach((possibilidade) => {
+        if (teste % possibilidade == 0) {
+            resultado = teste/possibilidade;
+        }
+    })
+
+    if (resultado == 0) {
+        return descobrirDivisor((teste + 1), possibilidades);    
+    }
+    return resultado;    
 }
