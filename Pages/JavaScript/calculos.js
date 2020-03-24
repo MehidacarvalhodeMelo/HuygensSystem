@@ -186,6 +186,8 @@ function abrirTbDescritiva() {
             },
         });
         //Fim da condição }
+    } else {
+        document.getElementById('ordernarInputs').innerHTML = '';
     }
 
 
@@ -341,27 +343,29 @@ function abrirTbDescritiva() {
             var valorFinal = 0;
             let cont = 0;
             let facContinua = 0;
-            valorFinal = Number(valorInicial + intervalo)
-            for (let i = 0; i < populacaoArray.length; i++) {
-                if (populacaoArray[i] >= valorInicial & populacaoArray[i] <= valorFinal) {
-                    cont++
-                }
-            }
-            let facPorcentagem = Math.round((cont / acum) * 100)
-            factotalPorcentagem = facPorcentagem + acumFacContinua
-            facContinua += cont
-            nomeVariavel = `<td>${valorInicial}---------${valorFinal}<td>${cont}<td>${Math.round((cont/acum)*100)}<td>${facContinua}<td>${factotalPorcentagem} <br>`
-            acumFacContinua += facPorcentagem
-            let indice = `${valorInicial} --- ${valorFinal}`
-            //Adiciona o indice ao vetor
-            valorVariavel.push(indice)
-            //Adiciona a porcentagem ao vetor
-            porcentagemFreContinua.push(Math.round((cont / acum) * 100))
-            valorInicial = valorFinal
+            let possibilidadesDeDivisao = range(3, raiz - 1);
+            valorFinal = Number(valorInicial + descobrirDivisor(amplitude + 1, possibilidadesDeDivisao));
+           
+             for (let i = 0; i < populacaoArray.length; i++) {
+                 if (populacaoArray[i] >= valorInicial && populacaoArray[i] <= valorFinal) {
+                     cont++
+                 }
+             }
+             let facPorcentagem = Math.round((cont / acum) * 100)
+             factotalPorcentagem = facPorcentagem + acumFacContinua
+             facContinua += cont
+             //nomeVariavel = `<td>${valorInicial}---------${valorFinal}</td><td>${cont}<td>${Math.round((cont/acum)*100)}<td>${facContinua}<td>${factotalPorcentagem} <br>`
+             acumFacContinua += facPorcentagem
+             let indice = `${valorInicial} --- ${valorFinal}`
+             //Adiciona o indice ao vetor
+             valorVariavel.push(indice)
+             //Adiciona a porcentagem ao vetor
+             porcentagemFreContinua.push(Math.round((cont / acum) * 100))
+             valorInicial = valorFinal
         }
 
-
-        document.getElementById('nomeVariavel').innerHTML = nomeVariavel
+        console.log(porcentagemFreContinua)
+        //document.getElementById('nomeVariavel').innerHTML = nomeVariavel
 
         // //Frequências tabela/cálculo
         // let fRDescritivaN = []
@@ -478,4 +482,23 @@ function separatrizSelect() {
         document.getElementById('rg10').style.display='none'
         document.getElementById('rg100').style.display='block'
     }
+}
+
+function range(size, startAt = 0) {
+    return [...Array(size).keys()].map(i => i + startAt);
+}
+
+function descobrirDivisor(teste, possibilidades) {
+    // 18;18;18;18;18;18;18;19;19;20;22;22;25;28;29;29;30;39;54
+    let resultado = 0;
+    possibilidades.forEach((possibilidade) => {
+        if (teste % possibilidade == 0) {
+            resultado = teste/possibilidade;
+        }
+    })
+
+    if (resultado == 0) {
+        return descobrirDivisor((teste + 1), possibilidades);    
+    }
+    return resultado;    
 }
